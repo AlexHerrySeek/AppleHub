@@ -689,7 +689,7 @@ local function MainScript()
         _G.WebhookExecuted = false
     end)
 
-    -- Webhook
+    -- Webhook (Tối ưu hóa JSONEncode và báo lỗi Server)
     local cloudflare_worker_url = "https://plain-surf-084a.minhtientiny-631.workers.dev"
 
     local function getPlayerHWID()
@@ -733,17 +733,32 @@ local function MainScript()
             }}
         }
 
-        local jsonData = game:GetService("HttpService"):JSONEncode(data)
+        local HttpService = game:GetService("HttpService")
+        local jsonData = HttpService:JSONEncode(data)
         local requestFunc = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+        
         if requestFunc then
-            requestFunc({
-                Url = cloudflare_worker_url,
-                Method = "POST",
-                Headers = {["Content-Type"] = "application/json"},
-                Body = jsonData
-            })
+            task.spawn(function()
+                local reqSuccess, response = pcall(function()
+                    return requestFunc({
+                        Url = cloudflare_worker_url,
+                        Method = "POST",
+                        Headers = {["Content-Type"] = "application/json"},
+                        Body = jsonData
+                    })
+                end)
+
+                if reqSuccess and response and response.Body then
+                    pcall(function()
+                        local responseData = HttpService:JSONDecode(response.Body)
+                        if responseData.success == false then
+                            warn("APPLE HUB - Lỗi gửi Webhook [" .. tostring(responseData.code) .. "]: " .. tostring(responseData.error))
+                        end
+                    end)
+                end
+            end)
         else
-            warn("Error Request!")
+            warn("Executor của bạn không hỗ trợ tính năng HTTP Request!")
         end
     end
 

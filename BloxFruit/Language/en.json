@@ -635,6 +635,8 @@
     "view_leviathan": "View Leviathan",
     "view_leviathan_desc": "View Leviathan Bikini.",
     "view_indra": "View Mygame43 Kill Rip_Indra",
-    "view_indra_desc": "View Animation Movie Mygame43 Kill Rip_Indra."
+    "view_indra_desc": "View Animation Movie Mygame43 Kill Rip_Indra.",
+    "create_aura": "Create Player Aura",
+    "create_aura_desc": "Create Draco aura effect on your character"
   }
 }

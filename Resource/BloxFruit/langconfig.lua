@@ -4,22 +4,10 @@ local _httpService = game:GetService("HttpService")
 
 local _allData    = {}
 local _current    = {}
-local _revMap     = {}
 local _updaters   = {}
 
 _G.LangUpdaters = _G.LangUpdaters or {}
 _updaters = _G.LangUpdaters
-
-local function _flatten(tbl, prefix)
-    for k, v in pairs(tbl) do
-        local fk = prefix and (prefix .. "." .. k) or k
-        if type(v) == "table" then
-            _flatten(v, fk)
-        elseif type(v) == "string" and v ~= "" then
-            if not _revMap[v] then _revMap[v] = fk end
-        end
-    end
-end
 
 function LangConfig.LoadLanguage(url)
     local ok, raw = pcall(game.HttpGet, game, url)
@@ -27,8 +15,6 @@ function LangConfig.LoadLanguage(url)
     local decOk, data = pcall(_httpService.JSONDecode, _httpService, raw)
     if not decOk or type(data) ~= "table" then return false end
     _allData = data
-    _revMap  = {}
-    for _, t in pairs(_allData) do _flatten(t, nil) end
     local code = _G.LangCode or "en"
     _current = _allData[code] or _allData["en"] or {}
     return true
@@ -44,8 +30,12 @@ function LangConfig.KhanhThy(key)
     return tostring(val)
 end
 
+-- Register a function that re-renders some piece of UI from the current
+-- language table. Called once immediately (so the caller doesn't have to
+-- separately set the initial text), then again on every ApplyLanguage.
 function LangConfig.RL(fn)
     table.insert(_updaters, fn)
+    pcall(fn)
 end
 
 function LangConfig.ApplyLanguage(code, notifyFn)
@@ -56,22 +46,10 @@ function LangConfig.ApplyLanguage(code, notifyFn)
         _G.SaveData.Language_Save = code
         if SaveSettings then pcall(SaveSettings) end
     end
+    -- Instant retranslation: every registered updater re-renders its own
+    -- element directly from _current. No GUI-tree text matching, so it
+    -- works correctly no matter how many times you switch back and forth.
     for _, fn in ipairs(_updaters) do pcall(fn) end
-    pcall(function()
-        local guiParent = (gethui and gethui()) or game:GetService("CoreGui")
-        for _, obj in ipairs(guiParent:GetDescendants()) do
-            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-                local txt = obj.Text
-                if txt and #txt > 0 then
-                    local tKey = _revMap[txt]
-                    if tKey then
-                        local newTxt = LangConfig.KhanhThy(tKey)
-                        if newTxt ~= tKey and newTxt ~= txt then obj.Text = newTxt end
-                    end
-                end
-            end
-        end
-    end)
     if notifyFn then pcall(notifyFn, code) end
 end
 

@@ -6791,8 +6791,8 @@ local SaveManager = {} do
                         objects = {}
                 }
 
-                for idx, option in next, SaveManager.Options do
-                        if not self.Parser[option.Type] then continue end
+                for idx, option in next, (self.Options or SaveManager.Options or {}) do
+                        if not option or not self.Parser[option.Type] then continue end
                         if self.Ignore[idx] then continue end
 
                         table.insert(data.objects, self.Parser[option.Type].Save(idx, option))
@@ -7686,7 +7686,7 @@ function Library:BuildLanguageSection(tab, availableLangs)
                 Title    = KhanhThy("setting.sel_lang") ~= "setting.sel_lang"
                            and KhanhThy("setting.sel_lang") or "Language",
                 Values   = langs,
-                Default  = _G.LangCode or "vi",
+                Default  = _G.LangCode or "en",
                 Callback = function(val)
                         ApplyLanguage(val)
                 end

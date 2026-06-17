@@ -3592,7 +3592,7 @@ ElementsTable.Button = (function()
         Element.__index = Element
         Element.__type = "Button"
 
-        function Element:New(Config)
+        function Element:New(Idx, Config)
                 assert(Config.Title, "Button - Missing Title")
                 Config.Callback = Config.Callback or function() end
 
@@ -4312,6 +4312,7 @@ ElementsTable.Dropdown = (function()
                                 Str = Dropdown.Value or ""
                         end
 
+                        DropdownDisplay.Text = Str
                         DropdownDisplay.PlaceholderText = (Str == "" and "..." or Str)
                 end
 
@@ -4798,7 +4799,7 @@ ElementsTable.Paragraph = (function()
         Paragraph.__index = Paragraph
         Paragraph.__type = "Paragraph"
 
-        function Paragraph:New(Config)
+        function Paragraph:New(Idx, Config)
                 assert(Config.Title, "Paragraph - Missing Title")
                 Config.Content = Config.Content or ""
 
@@ -7686,7 +7687,7 @@ function Library:BuildLanguageSection(tab, availableLangs)
                 Title    = KhanhThy("setting.sel_lang") ~= "setting.sel_lang"
                            and KhanhThy("setting.sel_lang") or "Language",
                 Values   = langs,
-                Default  = _G.LangCode or "en",
+                Default  = _G.LangCode or "vi",
                 Callback = function(val)
                         ApplyLanguage(val)
                 end

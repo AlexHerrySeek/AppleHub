@@ -3592,7 +3592,7 @@ ElementsTable.Button = (function()
         Element.__index = Element
         Element.__type = "Button"
 
-        function Element:New(Idx, Config)
+        function Element:New(Config)
                 assert(Config.Title, "Button - Missing Title")
                 Config.Callback = Config.Callback or function() end
 
@@ -4799,7 +4799,7 @@ ElementsTable.Paragraph = (function()
         Paragraph.__index = Paragraph
         Paragraph.__type = "Paragraph"
 
-        function Paragraph:New(Idx, Config)
+        function Paragraph:New(Config)
                 assert(Config.Title, "Paragraph - Missing Title")
                 Config.Content = Config.Content or ""
 
@@ -6680,12 +6680,26 @@ Elements.__namecall = function(Table, Key, ...)
         return Elements[Key](...)
 end
 
+local _SingleArgTypes = { Button = true, Paragraph = true }
+
 for _, ElementComponent in pairs(ElementsTable) do
         Elements["Add" .. ElementComponent.__type] = function(self, Idx, Config)
                 ElementComponent.Container = self.Container
                 ElementComponent.Type = self.Type
                 ElementComponent.ScrollFrame = self.ScrollFrame
                 ElementComponent.Library = Library
+
+                if _SingleArgTypes[ElementComponent.__type] then
+                        -- These element types take only a Config table and have no
+                        -- meaningful Idx (they aren't registered into Library.Options).
+                        -- Support both call styles: AddButton({...}) and
+                        -- AddButton("uid", {...}).
+                        local cfg = Config
+                        if cfg == nil and type(Idx) == "table" then
+                                cfg = Idx
+                        end
+                        return ElementComponent:New(cfg)
+                end
 
                 return ElementComponent:New(Idx, Config)
         end

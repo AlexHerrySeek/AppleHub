@@ -4226,11 +4226,16 @@ ElementsTable.Dropdown = (function()
         end)
 
         Creator.AddSignal(DropdownInner.MouseButton1Click, function()
-                        if Dropdown.Opened then
-                                Dropdown:Close()
-                                return
+                        local ok, err = pcall(function()
+                                if Dropdown.Opened then
+                                        Dropdown:Close()
+                                        return
+                                end
+                                Dropdown:Open()
+                        end)
+                        if not ok then
+                                warn("[Dropdown] Failed to toggle '" .. tostring(Config.Title) .. "': " .. tostring(err))
                         end
-                        Dropdown:Open()
                 end)
 
                 local ScrollFrame = self.ScrollFrame
@@ -4247,10 +4252,6 @@ ElementsTable.Dropdown = (function()
                         ScrollFrame.ScrollingEnabled = false
                         DropdownHolderCanvas.Visible = true
 
-                        if Dropdown.LoadedItems == 0 and #Dropdown.Values > 0 then
-                                Dropdown:LoadNextBatch()
-                        end
-
                         -- minimal: fade in + slight scale from 0.97 → 1
                         DropdownHolderFrame.Size = UDim2.fromScale(1, 0)
                         TweenService:Create(DropdownHolderFrame,
@@ -4261,6 +4262,13 @@ ElementsTable.Dropdown = (function()
                                 TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
                                 { Rotation = -90 }
                         ):Play()
+
+                        if Dropdown.LoadedItems < #Dropdown.Values then
+                                local ok, err = pcall(Dropdown.LoadNextBatch, Dropdown)
+                                if not ok then
+                                        warn("[Dropdown] LoadNextBatch failed for '" .. tostring(Config.Title) .. "': " .. tostring(err))
+                                end
+                        end
                 end
 
                 function Dropdown:Close()

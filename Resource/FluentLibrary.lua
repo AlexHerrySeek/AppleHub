@@ -1,12 +1,23 @@
 --[[
-	Credit: Original Fluent (dawid-scripts) + Themes (ActualMasterOogway)
-	PATCHES APPLIED:
-	• Library:Destroy         – nil Model guard
-	• Library:ToggleAcrylic   – nil Model guard
-	• Library:ToggleTransparency – FindFirstChild("Background") fallback
-	• TranslateManager added  – Google Translate, no external deps
-	• banana-hub.xyz removed  – polling system stripped entirely
+ █████╗ ██████╗ ██████╗ ██╗     ███████╗    ██╗  ██╗██╗   ██╗██████╗     ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗
+██╔══██╗██╔══██╗██╔══██╗██║     ██╔════╝    ██║  ██║██║   ██║██╔══██╗    ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝
+███████║██████╔╝██████╔╝██║     █████╗      ███████║██║   ██║██████╔╝    ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  
+██╔══██║██╔═══╝ ██╔═══╝ ██║     ██╔══╝      ██╔══██║██║   ██║██╔══██╗    ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  
+██║  ██║██║     ██║     ███████╗███████╗    ██║  ██║╚██████╔╝██████╔╝    ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗
+╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚══════╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝     ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
+by    888b     d888 d8b               888    888                                   888            
+      8888b   d8888 Y8P               888    888                                   888            
+      88888b.d88888                   888    888                                   888            
+      888Y88888P888 888  .d88b.       8888888888  .d88b.  888d888 888d888 888  888 888888 .d88b.  
+      888 Y888P 888 888 d88""88b      888    888 d8P  Y8b 888P"   888P"   888  888 888   d88""88b 
+      888  Y8P  888 888 888  888      888    888 88888888 888     888     888  888 888   888  888 
+      888   "   888 888 Y88..88P      888    888 Y8b.     888     888     Y88b 888 Y88b. Y88..88P 
+      888       888 888  "Y88P"       888    888  "Y8888  888     888      "Y88888  "Y888 "Y88P"  
+
+Main Credits
+- Nguyễn Minh Nhật (Mio Herruto)
 ]]
+
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer

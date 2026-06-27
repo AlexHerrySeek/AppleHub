@@ -3042,4 +3042,4 @@ function Library:Notify(Config)
 end
 if getgenv then getgenv().Fluent=Library else Fluent=Library end
 
-return Library, SaveManager, InterfaceManager
+return Library, SaveManager, InterfaceManager, TranslateManager

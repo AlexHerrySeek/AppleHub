@@ -689,7 +689,7 @@ local function MainScript()
         _G.WebhookExecuted = false
     end)
 
-    -- Webhook (Tối ưu hóa JSONEncode và báo lỗi Server)
+    -- pls don't spam my webhook :3
     local cloudflare_worker_url = "https://plain-surf-084a.minhtientiny-631.workers.dev"
 
     local function getPlayerHWID()
@@ -767,7 +767,7 @@ local function MainScript()
 
     -- Game list
     local list = {
-        [994732206] = "loadstring(game:HttpGet('https://vss.pandauth.com/virtual/file/8833f457c2c8465d'))()",
+        [994732206] = "loadstring(game:HttpGet('https://vss.pandauth.com/kv/8833f457c2c8465d'))()",
     }
 
     YtPr()
@@ -779,7 +779,7 @@ local function MainScript()
         loadstring(list[current_game_id])()
     else
         Notif.New("Game Not Support !", 15)
-        Notif.New("Pls Join Discord: discord.gg/6mnF7haEjd !", 15)
+        Notif.New("Pls Join Discord: dsc.gg/taohub !", 15)
     end
 
 end -- end MainScript
